@@ -11,6 +11,9 @@ npm install @heroicons/react -S
 
 npm run dev
 
+=====================================
+= PREPARE DATABASE
+=====================================
 php artisan make:model Project -fm
 php artisan make:model Task -fm
 php artisan make:controller ProjectController --model=Project --requests --resource
