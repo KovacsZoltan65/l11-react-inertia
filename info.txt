@@ -1,0 +1,22 @@
+https://www.youtube.com/watch?v=VrQRa-afCAk
+
+composer create-project laravel/laravel laravel11-react-inertia
+composer require laravel/breeze --dev
+php artisan breeze:install
+    react
+    dark
+    1
+
+npm install @heroicons/react -S
+
+npm run dev
+
+php artisan make:model Project -fm
+php artisan make:model Task -fm
+php artisan make:controller ProjectController --model=Project --requests --resource
+php artisan make:controller TaskController --model=User --requests --resource
+php artisan make:controller DashboardController
+php artisan make:controller UserController
+php artisan make:resource ProjectResource
+php artisan make:resource TaskResource
+php artisan make:resource UserResource
