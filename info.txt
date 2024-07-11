@@ -1,5 +1,7 @@
 https://www.youtube.com/watch?v=VrQRa-afCAk
 
+00:48:55 - Create Controllers and Define Routes
+
 composer create-project laravel/laravel laravel11-react-inertia
 composer require laravel/breeze --dev
 php artisan breeze:install
