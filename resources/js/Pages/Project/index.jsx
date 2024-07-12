@@ -7,8 +7,6 @@ import TextInput from "@/Components/TextInput";
 import {PROJECT_STATUS_TEXT_MAP, PROJECT_STATUS_CLASS_MAP} from "@/constants.jsx";
 import SelectInput from "@/Components/SelectInput";
 
-import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/16/solid';
-
 export default function Index({ auth, projects, queryParams = null, success }) {
 
     // If queryParams is not provided, set it to an empty object.
@@ -168,10 +166,12 @@ export default function Index({ auth, projects, queryParams = null, success }) {
                                             >
                                                 {/* ID */}
                                                 <td className="px-3 py-2">{project.id}</td>
+                                                
                                                 {/* Image */}
                                                 <td className="px-3 py-2">
                                                     <img src={project.image_path} style={{ width: 60 }} />
                                                 </td>
+
                                                 {/* Name */}
                                                 <th className="px-3 py-2 text-gray-100 text-nowrap hover:underline">
                                                     <Link href={route("project.show", project.id)}>
