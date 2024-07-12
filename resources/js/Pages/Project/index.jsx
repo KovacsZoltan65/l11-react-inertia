@@ -11,36 +11,70 @@ import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/16/solid';
 
 export default function Index({ auth, projects, queryParams = null, success }) {
 
+    // If queryParams is not provided, set it to an empty object.
+    // This is needed because the component will be called with
+    // the props that are passed to it from the route, and if the
+    // route does not specify the queryParams, it will be undefined.
     queryParams = queryParams || {};
 
+    /**
+     * Handles the change event of the search input field.
+     * If the value is not empty, it adds the value to the queryParams object.
+     * If the value is empty, it deletes the key from the queryParams object.
+     * Finally, it makes a GET request to the project.index route with the updated queryParams.
+     *
+     * @param {string} name - The name of the field being searched.
+     * @param {string} value - The value being searched.
+     */
     const searchFieldChanged = (name, value) => {
+        // If the value is not empty, add it to the queryParams object with the given name.
         if(value){
             queryParams[name] = value;
-        }else{
+        }
+        // If the value is empty, delete the key from the queryParams object.
+        else{
             delete queryParams[name];
         }
 
+        // Make a GET request to the project.index route with the updated queryParams.
         router.get(route("project.index", queryParams));
     };
 
+    /**
+     * Handles the change event of the sort field.
+     * If the field is the same as the current sort field,
+     * it toggles the sort direction. Otherwise, it sets
+     * the sort field and direction to the new field.
+     * Finally, it makes a GET request to the project.index route with the updated queryParams.
+     *
+     * @param {string} name - The name of the sort field.
+     */
     const sortChanged = (name) => {
-        if(name === queryParams.sort_field) {
-            if(queryParams.sort_direction === 'asc'){
-                queryParams.sort_direction = 'desc';
-            }else{
-                queryParams.sort_direction = 'asc';
-            }
-        }else{
-            queryParams.sort_field = name;
-            queryParams.sort_direction = 'asc';
-        }
+        // Save the current sort field and direction from the queryParams object.
+        const currentSortField = queryParams.sort_field;
+        const currentSortDirection = queryParams.sort_direction;
 
+        // If the sort field is the same as the current sort field,
+        // toggle the sort direction. Otherwise, set the sort field and direction to the new field.
+        queryParams.sort_field = name;
+        queryParams.sort_direction = currentSortField === name && currentSortDirection === 'asc' ? 'desc' : 'asc';
+
+        // Make a GET request to the project.index route with the updated queryParams.
         router.get(route("project.index", queryParams));
     };
 
+    /**
+     * Handles the key press event for search fields.
+     * If the pressed key is 'Enter', it calls the searchFieldChanged function.
+     *
+     * @param {string} name - The name of the field being searched.
+     * @param {object} e - The key press event object.
+     */
     const onKeyPress = (name, e) => {
+        // If the pressed key is not 'Enter', do nothing.
         if(e.key !== 'Enter') return;
 
+        // Call the searchFieldChanged function with the field name and target value.
         searchFieldChanged(name, e.target.value);
     };
 
