@@ -13,11 +13,12 @@ export default function Create({ auth }) {
         status: '',
         description: '',
         due_date: '',
-
     });
 
     const onSubmit = (e) => {
         e.preventDefault();
+
+        post(route('project.store'));
     };
 
     return (
@@ -37,22 +38,27 @@ export default function Create({ auth }) {
 
                                 {/* IMAGE */}
                                 <div>
-                                    <InputLabel htmlFor="project_image_path" 
-                                        value="Project Image" />
-                                    <TextInput id="project_image_path" name="image"
-                                        type="file" value={data.image}
+                                    <InputLabel
+                                        htmlFor="project_image_path"
+                                        value="Project Image"
+                                    />
+                                    <TextInput
+                                        id="project_image_path"
+                                        type="file"
+                                        name="image"
                                         className="mt-1 block w-full"
-                                        onChange={(e) => setData('image', e.target.value)} />
+                                        onChange={(e) => setData("image", e.target.files[0])}
+                                    />
                                     <InputError message={errors.image} className="mt-2" />
                                 </div>
 
                                 {/* NAME */}
                                 <div className="mt-4">
-                                    <InputLabel htmlFor="project_name" 
+                                    <InputLabel htmlFor="project_name"
                                         value="Project Name" />
                                     <TextInput id="name" name="name"
                                         type="text" value={data.name}
-                                        className="mt-1 block w-full" 
+                                        className="mt-1 block w-full"
                                         isFocused={true}
                                         onChange={(e) => setData('name', e.target.value)} />
                                     <InputError message={errors.name} className="mt-2" />
@@ -70,7 +76,7 @@ export default function Create({ auth }) {
                                         name="description"
                                         value={data.description}
                                         className="mt-1 block w-full"
-                                        onChange={(e) => setData("description", e.target.value)}/>
+                                        onChange={(e) => setData("description", e.target.value)} />
 
                                     <InputError message={errors.description} className="mt-2" />
                                 </div>
@@ -113,14 +119,19 @@ export default function Create({ auth }) {
                                     <InputError message={errors.project_status} className="mt-2" />
                                 </div>
 
-                                {/* BUTTON */}
+                                {/* Elküldés és Mégse gombok */}
                                 <div className="mt-4 text-right">
+                                    {/* Mégse gomb */}
+                                    {/* Visszaküldi a felhasználót a projekt indexoldalára */}
                                     <Link
                                         href={route("project.index")}
                                         className="bg-gray-100 py-1 px-3 text-gray-800 rounded shadow transition-all hover:bg-gray-200 mr-2"
                                     >
                                         Cancel
                                     </Link>
+
+                                    {/* Küldés gomb */}
+                                    {/* Elküldi az űrlap adatait a szervernek */}
                                     <button className="bg-emerald-500 py-1 px-3 text-white rounded shadow transition-all hover:bg-emerald-600">
                                         Submit
                                     </button>

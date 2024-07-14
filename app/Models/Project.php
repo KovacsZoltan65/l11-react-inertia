@@ -11,9 +11,7 @@ class Project extends Model
     
     protected $table = 'projects';
     
-    protected $fillable = [
-        'name', 'description', 'due_date', 'status', 'image_path'
-    ];
+    protected $fillable = ['image_path', 'name', 'description', 'status', 'due_date', 'created_by', 'updated_by'];
     
     public function tasks()
     {

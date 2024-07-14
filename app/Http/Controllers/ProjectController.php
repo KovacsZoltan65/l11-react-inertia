@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreProjectRequest;
-use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Resources\ProjectResource;
 use App\Http\Resources\TaskResource;
 use App\Models\Project;
+use App\Http\Requests\StoreProjectRequest;
+use App\Http\Requests\UpdateProjectRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     */
     /**
      * Display a paginated listing of the projects.
      *
@@ -21,58 +20,31 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        // Create a query to retrieve projects
+        // Hozzon létre egy lekérdezést a projektek lekéréséhez
         $query = Project::query()
-            // Apply filtering by name if requested
+            // Kérésre alkalmazzon név szerinti szűrést
             ->when(request('name'), function ($q, $name) {
                 return $q->where('name', 'like', '%' . $name . '%');
             })
-            // Apply filtering by status if requested
+            // Kérésre alkalmazza az állapot szerinti szűrést
             ->when(request('status'), function ($q, $status) {
                 return $q->where('status', $status);
             })
-            // Order the projects by the specified field and direction
+            // Rendezze a projekteket a megadott mező és irány szerint
             ->orderBy(request('sort_field', 'created_at'), request('sort_direction', 'desc'))
-            // Paginate the results, with 10 items per page
+            // Lapozza át az eredményeket úgy, hogy oldalanként 10 elem legyen
             ->paginate(10)
-            // Include 1 item on each side of the current page
+            // Helyezzen el 1 elemet az aktuális oldal mindkét oldalán
             ->onEachSide(1);
 
-        // Return the projects as a resource, along with the query parameters used in the request,
-        // and the success message from the session.
+        // Adja vissza a projekteket erőforrásként, a kérésben használt lekérdezési paraméterekkel együtt,
+        // és a munkamenet sikerüzenete.
         return inertia("Project/Index", [
             "projects" => ProjectResource::collection($query),
-            // If queryParams is not provided, set it to an empty object
+            // Ha a queryParams nincs megadva, állítsa be üres objektumra
             'queryParams' => request()->query() ?: null,
-            // If success is not provided, set it to null
+            // Ha nem ad meg sikert, állítsa nullára
             'success' => session('success', null),
-        ]);
-    }
-    /**
-     * Display a listing of the resource.
-     */
-    public function index_old()
-    {
-        $query = Project::query();
-        
-        $sortField = request('sort_field', 'created_at');
-        $sortDirection = request('sort_direction', 'desc');
-        
-        if(request('name')){
-            $query->where('name', 'like', '%' . request('name') . '%');
-        }
-        if(request('status')){
-            $query->where('status', request('status'));
-        }
-        
-        $projects = $query->orderBy($sortField, $sortDirection)
-                ->paginate(10)
-                ->onEachSide(1);
-        
-        return inertia("Project/Index", [
-            "projects" => ProjectResource::collection($projects),
-            'queryParams' => request()->query() ?: null,
-            'success' => session('success'),
         ]);
     }
 
@@ -89,7 +61,21 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        //
+        $data = $request->validated();
+        
+        /** @var $mage \Illuminate\Http\UploadedFile */
+        $image = $data['image'] ?? null;
+        if ($image) {
+            $data['image_path'] = $image->store('project/' . Str::random(), 'public');
+        }
+        
+        $data['created_by'] = Auth::id();
+        $data['updated_by'] = Auth::id();
+        
+        Project::create($data);
+        
+        return to_route('project.index')
+            ->with('success', 'Project was created');
     }
 
     /**
