@@ -28,9 +28,9 @@ class TaskResource extends JsonResource
             'project_id' => $this->project_id,
             'project' => new ProjectResource($this->project),
             'assigned_user_id' => $this->assigned_user_id,
-            'assignedUser' => $this->assignedUser ? new UserResource($this->assignedUser) : null,
-            'createdBy' => new UserResource($this->createdBy),
-            'updatedBy' => new UserResource($this->updatedBy),
+            'assignedUser' => $this->assignedUser ? new UserCrudResource($this->assignedUser) : null,
+            'createdBy' => new UserCrudResource($this->createdBy),
+            'updatedBy' => new UserCrudResource($this->updatedBy),
         ];
     }
 }

@@ -17,7 +17,7 @@ class ProjectResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $aa = [
+        return [
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
@@ -31,9 +31,5 @@ class ProjectResource extends JsonResource
             'createdBy' => new UserResource($this->createdBy),
             'updatedBy' => new UserResource($this->updatedBy),
         ];
-        
-\Log::info('$aa: ' . print_r($aa, true));
-        
-        return $aa;
     }
 }
