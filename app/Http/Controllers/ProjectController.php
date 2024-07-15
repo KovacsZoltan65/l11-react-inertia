@@ -50,43 +50,50 @@ class ProjectController extends Controller
 
     /**
      * Show the form for creating a new resource.
+     *
+     * @return \Inertia\Response
      */
     public function create()
     {
+        // Visszaadja a projekt létrehozásához tartozó komponenst
         return inertia('Project/Create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param StoreProjectRequest $request The request object containing the validated data.
+     * @return \Illuminate\Http\RedirectResponse The redirect response.
+     */
     public function store(StoreProjectRequest $request)
     {
+        // Get the validated data from the request.
         $data = $request->validated();
         
-        /** @var $mage \Illuminate\Http\UploadedFile */
+        // Get the image from the data.
+        /** @var $image \Illuminate\Http\UploadedFile|null */
         $image = $data['image'] ?? null;
+        
+        // If an image was uploaded, store it in the 'project' directory with a random name.
         if ($image) {
             $data['image_path'] = $image->store('project/' . Str::random(), 'public');
         }
         
+        // Set the created_by and updated_by fields to the authenticated user's ID.
         $data['created_by'] = Auth::id();
         $data['updated_by'] = Auth::id();
         
+        // Create a new project with the validated data.
         Project::create($data);
         
+        // Redirect to the project index page with a success message.
         return to_route('project.index')
             ->with('success', 'Project was created');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    /**
-     * Display the specified project and its associated tasks.
-     *
-     * @param Project $project The project to display.
-     * @return \Inertia\Response The Inertia response.
-     */
     /**
      * Display the specified project and its associated tasks.
      *
@@ -126,17 +133,53 @@ class ProjectController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
+    /**
+     * Show the form for editing the specified resource.
+     * 
+     * @param Project $project The project to edit.
+     * @return \Inertia\Response The Inertia response.
+     */
     public function edit(Project $project)
     {
-        //
+        // Return the project as a resource, to be used in the edit form.
+        return inertia('Project/Edit', [
+            'project' => new ProjectResource($project),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
+    /**
+     * Update the specified resource in storage.
+     * 
+     * @param UpdateProjectRequest $request The validated request data.
+     * @param Project $project The project to update.
+     */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        //
+        // Get the validated request data.
+        $data = $request->validated();
+        
+        // If an image was uploaded, store it in the 'project' directory with a random name.
+        // If the project already has an image, delete the old image.
+        $image = $data['image'] ?? null;
+        if ($image) {
+            if ($project->image_path) {
+                // Delete the old image directory.
+                Storage::disk('public')->deleteDirectory(dirname($project->image_path));
+            }
+            // Store the new image with a random name.
+            $data['image_path'] = $image->store('project/' . Str::random(), 'public');
+        }
+        
+        $data['updated_by'] = Auth::id();
+
+        // Update the project with the validated data.
+        $project->update($data);
+
+        // Redirect to the project index page with a success message.
+        return to_route('project.index')->with('success', "Project " . $project->name . " was updated");
     }
 
     /**
@@ -144,6 +187,14 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        //
+        $name = $project->name;
+        $project->delete();
+        
+        if ($project->image_path) {
+            Storage::disk('public')->deleteDirectory(dirname($project->image_path));
+        }
+
+        return to_route('project.index')
+                ->with('success', "Project {$name} was deleted");
     }
 }

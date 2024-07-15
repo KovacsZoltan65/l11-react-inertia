@@ -61,6 +61,12 @@ export default function Index({ auth, projects, queryParams = null, success }) {
         router.get(route("project.index", queryParams));
     };
 
+    const deleteProject = (project) => {
+        if (!window.confirm("Are you sure you want to delete the project?")) {
+            return;
+        }
+        router.delete(route("project.destroy", project.id));
+    };
     /**
      * Handles the key press event for search fields.
      * If the pressed key is 'Enter', it calls the searchFieldChanged function.
