@@ -6,7 +6,25 @@ import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
 
-export default function Create({ auth, task, projects, users }) {
+/**
+ * Szerkesztési összetevő egy feladat szerkesztéséhez.
+ * 
+ * @param {object} auth A hitelesítési objektum.
+ * @param {object} task A szerkesztendő feladatobjektum.
+ * @param {array} projects A projektek listája.
+ * @param {array} users A felhasználók listája.
+ */
+export default function Edit({ auth, task, projects, users }) {
+    /**
+     * UseForm hook példány az űrlapadatok kezelésére.
+     * 
+     * @type {Object}
+     * @property {Object} data - Az űrlap adatobjektum.
+     * @property {Function} setData - Az űrlapadatok frissítésének funkciója.
+     * @property {Function} post - Az űrlapadatok elküldésének funkciója.
+     * @property {Object} errors - Az űrlaphiba objektum.
+     * @property {Function} reset - Az űrlapadatok visszaállítására szolgáló funkció.
+     */
     const { data, setData, post, errors, reset } = useForm({
         image: "",
         name: task.name || "",
@@ -19,9 +37,18 @@ export default function Create({ auth, task, projects, users }) {
         _method: "PUT",
     });
 
+    /**
+     * Kezelje az űrlap benyújtását.
+     *
+     * @param {React.FormEvent} e - Az űrlap beküldési eseménye.
+     * @returns {void}
+     */
     const onSubmit = (e) => {
+        // Az alapértelmezett űrlapbeküldési viselkedés megakadályozása.
         e.preventDefault();
 
+        // Küldje el az űrlapadatokat a szervernek PUT kéréssel.
+        // Az útvonal tartalmazza a frissítendő feladat azonosítóját.
         post(route("task.update", task.id));
     };
 

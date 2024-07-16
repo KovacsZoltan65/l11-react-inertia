@@ -7,17 +7,39 @@ import { Head, Link, useForm } from "@inertiajs/react";
 import SelectInput from "@/Components/SelectInput";
 
 export default function Create({ auth }) {
+    /**
+     * The form data object.
+     * @type {Object}
+     * @property {string} image - A képfájl
+     * @property {string} name - A projekt neve.
+     * @property {string} status - A projekt állapota
+     * @property {string} description - A projekt leírása.
+     * @property {string} due_date - A projekt határideje
+     */
     const { data, setData, post, errors, reset } = useForm({
+        // A képfájl
         image: '',
+        // A projekt neve.
         name: '',
+        // A projekt állapota
         status: '',
+        // A projekt leírása.
         description: '',
+        // A projekt határideje
         due_date: '',
     });
 
+    /**
+     * Kezeli az űrlap beküldési eseményét.
+     *
+     * @param {Event} e - The form submission event.
+     * @return {void}
+     */
     const onSubmit = (e) => {
+        // Az alapértelmezett űrlapbeküldési viselkedés megakadályozása
         e.preventDefault();
 
+        // Küldje el az űrlapadatokat a szervernek post módszerrel a "project.store" útvonalon
         post(route('project.store'));
     };
 

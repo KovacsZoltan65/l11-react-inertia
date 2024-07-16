@@ -7,31 +7,13 @@ import { Head, Link, useForm } from "@inertiajs/react";
 import SelectInput from "@/Components/SelectInput";
 
 export default function Edit({ auth, project }) {
-    /**
-     * The form data object.
-     * @type {Object}
-     * @property {string} image - The image file.
-     * @property {string} image_path - The image path.
-     * @property {string} name - The project name.
-     * @property {string} status - The project status.
-     * @property {string} description - The project description.
-     * @property {string} due_date - The project due date.
-     * @property {string} _method - The HTTP method for the form submission.
-     */
     const { data, setData, post, errors, reset } = useForm({
-        // The image file
         image: '',
-        // The image path
         image_path: project.image_path || '',
-        // The project name
         name: project.name || '',
-        // The project status
         status: project.status || '',
-        // The project description
         description: project.description || '',
-        // The project due date
         due_date: project.due_date || '',
-        // The HTTP method for the form submission
         _method: 'PUT',
     });
 

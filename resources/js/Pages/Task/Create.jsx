@@ -6,7 +6,23 @@ import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
 
+/**
+ * Új feladat létrehozásának összetevője
+ * 
+ * @param {Object} auth - A hitelesítési objektum
+ * @param {Object} projects - A projecktek objektuma
+ * @param {Object} users - A felhasználók objecktuma
+ */
 export default function Create({ auth, projects, users }) {
+    /**
+     * Az űrlap adatobjektum.
+     * @type {Object}
+     * @property {string} image - A képfájl.
+     * @property {string} name - A feladat neve.
+     * @property {string} status - A feladat állapota.
+     * @property {string} description - A feladat leírása.
+     * @property {string} due_date - A feladat határideje.
+     */
     const { data, setData, post, errors, reset } = useForm({
         image: "",
         name: "",
@@ -15,9 +31,17 @@ export default function Create({ auth, projects, users }) {
         due_date: "",
     });
 
+    /**
+     * Kezeli az űrlap beküldési eseményét.
+     *
+     * @param {Event} e - Az űrlap beküldési eseménye.
+     * @return {void}
+     */
     const onSubmit = (e) => {
+        // Az alapértelmezett űrlapbeküldési viselkedés megakadályozása.
         e.preventDefault();
 
+        // Küldje el az űrlapadatokat a szervernek a "task.store" útvonalon.
         post(route("task.store"));
     };
 
