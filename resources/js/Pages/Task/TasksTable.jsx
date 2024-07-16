@@ -179,7 +179,8 @@ export default function TasksTable({
                                 </td>
                                 
                                 {/* Project Name */}
-                                {!hideProjectColumns && <td className="px-3 py-2">{task.project.name}</td>}
+                                {!hideProjectColumns && 
+                                <td className="px-3 py-2">{task.project.name}</td>}
 
                                 {/* Task Name */}
                                 <th className="px-3 py-2 text-gray-100 text-nowrap hover:underline">
