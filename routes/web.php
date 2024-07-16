@@ -28,8 +28,19 @@ Route::middleware(['auth', 'verified'])->group(function(){
     Route::get('/dashboard', fn() => Inertia::render('Dashboard')
     )->name('dashboard');
 
+    // =============================
+    // PROJECTS
+    // =============================
     Route::resource('project', ProjectController::class);
+    
+    // =============================
+    // TASKS
+    // =============================
     Route::resource('task', TaskController::class);
+    
+    // =============================
+    // USERS
+    // =============================
     Route::resource('user', UserController::class);
 });
 

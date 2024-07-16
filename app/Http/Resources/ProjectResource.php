@@ -17,7 +17,7 @@ class ProjectResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+        $aa = [
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
@@ -28,8 +28,10 @@ class ProjectResource extends JsonResource
             'image_path' => $this->image_path && !(str_starts_with($this->image_path, 'http')) ?
                 Storage::url($this->image_path) : $this->image_path,
             
-            'createdBy' => new UserResource($this->createdBy),
-            'updatedBy' => new UserResource($this->updatedBy),
+            'createdBy' => new UserCrudResource($this->createdBy),
+            'updatedBy' => new UserCrudResource($this->updatedBy),
         ];
+        //dd($aa);
+        return $aa;
     }
 }
